@@ -1,0 +1,2 @@
+import { buildApp } from './app.js'; import { env } from './config/env.js'; import { connectDatabase } from './config/database.js'; import { connectRedis,redis } from './config/redis.js';
+const app=buildApp(); async function start(){await connectDatabase();await connectRedis();await app.listen({port:env.PORT,host:env.HOST});} start().catch(async e=>{app.log.error(e);await redis.quit();process.exit(1)}); const close=async()=>{await app.close();await redis.quit();process.exit(0)};process.on('SIGTERM',close);process.on('SIGINT',close);

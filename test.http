@@ -1,0 +1,157 @@
+@baseUrl = http://localhost:5000/api
+@accessToken = REPLACE_AFTER_LOGIN
+@refreshToken = REPLACE_AFTER_LOGIN
+@walletId = REPLACE_WALLET_ID
+@transactionId = REPLACE_TRANSACTION_ID
+@depositId = REPLACE_DEPOSIT_ID
+@userId = REPLACE_USER_ID
+
+### Health
+GET {{baseUrl}}/health
+### Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{"firstName":"Patrick","lastName":"Business","email":"patrick@example.com","phoneNumber":"243000000000","password":"SecurePassword123!","country":"CD","dateOfBirth":"1995-01-01"}
+### Verify email
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{"email":"patrick@example.com","code":"123456"}
+### Resend verification
+POST {{baseUrl}}/auth/resend-verification
+Content-Type: application/json
+
+{"email":"patrick@example.com"}
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{"email":"patrick@example.com","password":"SecurePassword123!"}
+### Refresh token
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{"refreshToken":"{{refreshToken}}"}
+### Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
+### Current user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+### Get profile
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+### Update profile
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{"city":"Kinshasa","address":"Example address","occupation":"Business Owner"}
+### Verification status
+GET {{baseUrl}}/users/verification-status
+Authorization: Bearer {{accessToken}}
+### Wallets
+GET {{baseUrl}}/wallets
+Authorization: Bearer {{accessToken}}
+### Wallet
+GET {{baseUrl}}/wallets/{{walletId}}
+Authorization: Bearer {{accessToken}}
+### Wallet balance
+GET {{baseUrl}}/wallets/{{walletId}}/balance
+Authorization: Bearer {{accessToken}}
+### Wallet ledger
+GET {{baseUrl}}/wallets/{{walletId}}/ledger
+Authorization: Bearer {{accessToken}}
+### Deposit
+POST {{baseUrl}}/deposits/initiate
+Authorization: Bearer {{accessToken}}
+Idempotency-Key: deposit-test-{{$timestamp}}
+Content-Type: application/json
+
+{"walletId":"{{walletId}}","amount":"100.00","currency":"USD","phoneNumber":"243000000000","provider":"PROVIDER_CODE"}
+### Deposit status
+GET {{baseUrl}}/deposits/{{depositId}}
+Authorization: Bearer {{accessToken}}
+### National transfer
+POST {{baseUrl}}/transfers/national
+Authorization: Bearer {{accessToken}}
+Idempotency-Key: national-transfer-{{$timestamp}}
+Content-Type: application/json
+
+{"walletId":"{{walletId}}","recipient":"recipient@example.com","amount":"100.00","currency":"USD"}
+### International transfer
+POST {{baseUrl}}/transfers/international
+Authorization: Bearer {{accessToken}}
+Idempotency-Key: international-transfer-{{$timestamp}}
+Content-Type: application/json
+
+{"walletId":"{{walletId}}","recipient":"recipient@example.com","amount":"100.00","currency":"USD","destinationCountry":"KE"}
+### Transactions
+GET {{baseUrl}}/transactions
+Authorization: Bearer {{accessToken}}
+### Transaction details
+GET {{baseUrl}}/transactions/{{transactionId}}
+Authorization: Bearer {{accessToken}}
+### Receipt
+GET {{baseUrl}}/transactions/{{transactionId}}/receipt
+Authorization: Bearer {{accessToken}}
+### pawaPay webhook (development only; use an official authenticated payload)
+POST {{baseUrl}}/webhooks/pawapay
+Content-Type: application/json
+
+{"event":"EXAMPLE_EVENT"}
+### Admin dashboard
+GET {{baseUrl}}/admin/dashboard
+Authorization: Bearer {{accessToken}}
+### Admin users
+GET {{baseUrl}}/admin/users
+Authorization: Bearer {{accessToken}}
+### Admin user
+GET {{baseUrl}}/admin/users/{{userId}}
+Authorization: Bearer {{accessToken}}
+### Admin transactions
+GET {{baseUrl}}/admin/transactions
+Authorization: Bearer {{accessToken}}
+### Admin revenue
+GET {{baseUrl}}/admin/platform-revenue
+Authorization: Bearer {{accessToken}}
+### Admin deposits
+GET {{baseUrl}}/admin/deposits
+Authorization: Bearer {{accessToken}}
+### Admin webhooks
+GET {{baseUrl}}/admin/webhooks
+Authorization: Bearer {{accessToken}}
+### Admin audit logs
+GET {{baseUrl}}/admin/audit-logs
+Authorization: Bearer {{accessToken}}
+### Admin user status
+PATCH {{baseUrl}}/admin/users/{{userId}}/status
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{"status":"RESTRICTED"}
+### Admin fee configuration
+PATCH {{baseUrl}}/admin/config/fees
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{"nationalPercent":"0.8","internationalPercent":"1.2"}
+### Admin limit configuration
+PATCH {{baseUrl}}/admin/config/limits
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{"dailyMinorLimit":"100000"}
+### Admin country configuration
+PATCH {{baseUrl}}/admin/config/countries
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{"allowedCountries":["CD","KE"]}
+### Admin verification rules
+PATCH {{baseUrl}}/admin/config/verification-rules
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{"identityThresholdMinor":"100000"}
